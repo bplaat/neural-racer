@@ -8,7 +8,7 @@ inputs = lines[:, :-1]
 outputs = lines[:, -1]
 
 network = MLPRegressor(
-    max_iter = 600,
+    max_iter = 1000,
     hidden_layer_sizes = (120),
     alpha = 4,
     solver = 'adam',
