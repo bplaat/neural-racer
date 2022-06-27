@@ -42,7 +42,7 @@ import visualisation as vs
 vs.scannerType = scannerType
 
 sp.World (
-    WebSocketServer,
+    WebSocketServer, # cs.ControlServer(),
     ps.Physics,
     vs.Visualisation
 )

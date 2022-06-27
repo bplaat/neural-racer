@@ -32,5 +32,5 @@ sonarInputDim = 3
 
 sampleFileName = 'default.samples'
 
-def getTargetVelocity (steeringAngle):
-    return (90 - abs (steeringAngle)) / 60
+def getTargetVelocity(steeringAngle):
+    return (90 - abs(steeringAngle)) / 60
