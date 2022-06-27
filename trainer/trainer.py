@@ -1,8 +1,8 @@
 from sklearn.neural_network import MLPRegressor
-import numpy as np
+import numpy
 import pickle
 
-lines = np.loadtxt('default.samples')
+lines = numpy.loadtxt('default.samples')
 
 inputs = lines[:, :-1]
 outputs = lines[:, -1]
