@@ -15,7 +15,7 @@ class HardcodedClient:
         self.steeringAngle = 0
         self.halfApertureAngle = False
 
-        with open(pm.sampleFileName, 'w') as self.sampleFile:
+        with open(pm.sampleFileName, 'a') as self.sampleFile:
             asyncio.run(self.connect())
 
     async def connect(self):
@@ -26,7 +26,7 @@ class HardcodedClient:
                 self.sweep()
                 await self.output()
                 self.logTraining()
-        await asyncio.sleep(0.02)
+                await asyncio.sleep(0.02)
 
     async def input(self):
         await self.websocket.send(json.dumps({ 'type': 'readSensors' }))

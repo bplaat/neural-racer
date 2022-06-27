@@ -20,6 +20,10 @@
     <p>Made by <a href="https://bplaat.nl/">Bastiaan van der Plaat</a></p>
 
     <script type="module">
+const TICKS_PER_SECOND = 20;
+const TARGET_SPEED = 2;
+const TARGET_ROTATION_SPEED = 30;
+
 function degrees(radians) {
     return radians * 180 / Math.PI;
 }
@@ -31,8 +35,6 @@ function radians(degrees) {
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const output = document.getElementById('output');
-
-const TICKS_PER_SECOND = 20;
 
 const keys = {};
 window.addEventListener('keydown', event => {
@@ -56,6 +58,7 @@ output.textContent = `Target velocity: ${targetVelocity}, steering angle: ${stee
 ws.onmessage = event => {
     const { halfApertureAngle, halfMiddleApertureAngle, lidarDistances } = JSON.parse(event.data);
 
+    // Draw rader canvas thingy
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (let i = 0; i < lidarDistances.length; i++) {
@@ -74,20 +77,37 @@ ws.onmessage = event => {
     ctx.arc(canvas.width / 2, canvas.height / 2, 15, 0, 2 * Math.PI);
     ctx.fillStyle = '#44f';
     ctx.fill();
+
+    // Log data when driving
+    if (keys['w'] || keys['s'] || keys['a'] || keys['d']) {
+        const samples = [];
+        for (let i = 0; i < 16; i++) samples[i] = 20;
+        const sectorAngle = 2 * halfApertureAngle / 16;
+        for (let i = 0; i < lidarDistances.length; i++) {
+            const lidarAngle = -halfApertureAngle + (halfApertureAngle * 2 / lidarDistances.length * i);
+            const sectorIndex = Math.round(lidarAngle / sectorAngle);
+            samples[sectorIndex] = Math.min(samples[sectorIndex], lidarDistances[i]);
+        }
+        samples[16] = steeringAngle;
+        ws.send(JSON.stringify({ type: 'log', message: samples.map(sample => {
+            if (sample == Math.floor(sample)) sample += '.0';
+            return sample;
+        }).join(' ') }));
+    }
 };
 
 function tick() {
     ws.send(JSON.stringify({ type: 'readSensors' }));
 
     if (keys['w']) {
-        if (targetVelocity != 1) {
-            targetVelocity = 1;
+        if (targetVelocity != TARGET_SPEED) {
+            targetVelocity = TARGET_SPEED;
             statsDirty = true;
         }
     }
     else if (keys['s']) {
-        if (targetVelocity != -1) {
-            targetVelocity = -1;
+        if (targetVelocity != -TARGET_SPEED) {
+            targetVelocity = -TARGET_SPEED;
             statsDirty = true;
         }
     }
@@ -99,14 +119,14 @@ function tick() {
     }
 
     if (keys['a']) {
-        if (steeringAngle != 30) {
-            steeringAngle = 30;
+        if (steeringAngle != TARGET_ROTATION_SPEED) {
+            steeringAngle = TARGET_ROTATION_SPEED;
             statsDirty = true;
         }
     }
     else if (keys['d']) {
-        if (steeringAngle != -30) {
-            steeringAngle = -30;
+        if (steeringAngle != -TARGET_ROTATION_SPEED) {
+            steeringAngle = -TARGET_ROTATION_SPEED;
             statsDirty = true;
         }
     }

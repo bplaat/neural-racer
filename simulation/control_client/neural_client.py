@@ -29,7 +29,7 @@ class NeuralClient:
                 await self.input()
                 self.sweep()
                 await self.output()
-        await asyncio.sleep(0.02)
+                await asyncio.sleep(0.02)
 
     async def input(self):
         await self.websocket.send(json.dumps({ 'type': 'readSensors' }))
