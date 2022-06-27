@@ -34,14 +34,15 @@ scannerType = 'lidar' # if input ('Lidar or sonar <l/s>: ') == 'l' else 'sonar' 
 
 import simpylc as sp
 
-import control_server as cs
+# import control_server as cs
+from websocket_server import WebSocketServer
 import physics as ps
 import visualisation as vs
 
 vs.scannerType = scannerType
 
 sp.World (
-    cs.ControlServer,
+    WebSocketServer,
     ps.Physics,
     vs.Visualisation
 )
