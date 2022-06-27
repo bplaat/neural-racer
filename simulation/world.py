@@ -33,8 +33,6 @@ ss.path +=  [os.path.abspath (relPath) for relPath in  ('../../..', '..')]   # I
 scannerType = 'lidar' # if input ('Lidar or sonar <l/s>: ') == 'l' else 'sonar'  # Should be done prior to any SimPyLC related imports due to concurrency
 
 import simpylc as sp
-
-# import control_server as cs
 from websocket_server import WebSocketServer
 import physics as ps
 import visualisation as vs
@@ -42,7 +40,7 @@ import visualisation as vs
 vs.scannerType = scannerType
 
 sp.World (
-    WebSocketServer, # cs.ControlServer(),
+    WebSocketServer,
     ps.Physics,
     vs.Visualisation
 )
