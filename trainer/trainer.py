@@ -19,7 +19,7 @@ network = MLPRegressor(
 
 tests = [ (inputs[i], outputs[i]) for i in range(0, 5000, 50) ]
 for test in tests:
-    print(f'Predication: {network.predict([test[0]])}, Answer: {test[1]}')
+    print(f'Prediction: {network.predict([test[0]])}, Answer: {test[1]}')
 
 print(f'Score: {network.score(inputs, outputs)}')
 
